@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<title>COVID Deaths</title>
+	<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+	<script src="https://api.mapbox.com/mapbox-gl-js/v1.9.1/mapbox-gl.js"></script>
+	<link href="https://api.mapbox.com/mapbox-gl-js/v1.9.1/mapbox-gl.css" rel="stylesheet" />
+
+	<style>
+		body {
+		  margin: 0;
+		  padding: 0;
+		  font-family: 'Helvetica Neue', Helvetica, Arial, Sans-serif;
+		}
+
+		#map {
+		  position: absolute;
+		  top: 0;
+		  bottom: 0;
+		  width: 100%;
+		}
+
+    #play-button {
+                background: #F14E58;
+                padding-right: 26px;
+                border-radius: 3px;
+                border: none;
+                color: white;
+                margin: 0;
+                padding: 0 12px;
+                width: 60px;
+                cursor: pointer;
+                height: 30px;
+            }
+
+            #play-button:hover {
+                background-color: #848480;
+            }
+
+            .ticks {
+                font-size: 10px;
+            }
+
+            .track,
+            .track-inset,
+            .track-overlay {
+                stroke-linecap: round;
+            }
+
+            .track {
+                stroke: #000;
+                stroke-opacity: 0.3;
+                stroke-width: 10px;
+            }
+
+            .track-inset {
+                stroke: #dcdcdc;
+                stroke-width: 8px;
+            }
+
+            .track-overlay {
+                pointer-events: stroke;
+                stroke-width: 50px;
+                stroke: transparent;
+                cursor: crosshair;
+            }
+
+            .handle {
+                fill: #fff;
+                stroke: #000;
+                stroke-opacity: 0.5;
+            }
+
+		h1 {
+		  font-size: 20px;
+		  line-height: 30px;
+		}
+
+		h2 {
+		  font-size: 14px;
+		  line-height: 20px;
+		  margin-bottom: 10px;
+		}
+
+		a {
+		  text-decoration: none;
+		  color: #2dc4b2;
+		}
+
+		#console {
+		  position: absolute;
+		  width: 240px;
+		  margin: 10px;
+		  padding: 10px 20px;
+		  background-color: white;
+		}
+
+		.session {
+		  margin-bottom: 40px;
+		}
+
+		.row {
+		  height: 12px;
+		  width: 100%;
+		}
+
+		.colors {
+		  background: linear-gradient(to right, #ffffd4, #993404);
+		  margin-bottom: 5px;
+		}
+
+		.label {
+		  width: 15%;
+		  display: inline-block;
+		  text-align: center;
+		}
+	</style>
+</head>
+
+<body>
+	<div id="map"></div>
+	<div id='console'>
+		<h1> COVID19 Total Deaths Worldwide</h1>
+		<p>Data: CVApp and Prediction Model</p>
+  <div class='session' id='slidebar'>
+      <h2>Date: <label id='active-date'>2020-03-16</label></h2>
+		<input id="slider" class = 'row'
+    type="range" min="0" max="3" step="1" value="0" />
+    <button id="play-button">Play</button>
+	<div class='session'>
+	  <h2>Total Deaths</h2>
+	  <div class='row colors'>
+	  </div>
+	  <div class='row labels'>
+	    <div class='label'>0</div>
+	    <div class='label'>100</div>
+	    <div class='label'>500</div>
+	    <div class='label'>1000</div>
+	    <div class='label'>5000</div>
+			<div class='label'>10000+</div>
+			<p><strong><em></strong> Last updated 04/07/2020</em></p>
+	  </div>
+  </div>
+  </div>
+	</div>
+
+	<script src="//d3js.org/d3.v3.min.js" charset="utf-8"></script>
+	<script>
+		//preparation step, load style sheet
+		  mapboxgl.accessToken = 'pk.eyJ1IjoibW1hOTgiLCJhIjoiY2s1OGF5bGxhMG1oMjNlbzR1dWYybnFqbCJ9.MDPPnfBmlPCWmtCtpePJyg';
+			var map = new mapboxgl.Map({
+		    container: 'map',
+		    style: 'mapbox://styles/mma98/ck921uabn1r0i1imjo8bifmvg', //style sheet location
+		    center: [2.038, 45.036], //starting position
+		    zoom: 1.28 //starting zoom level
+		  });
+
+      // function filterBy(date) {
+      //   var filters = ['==', ['string',['get','date'], dates]];
+      //   map.setFilter('covid19-data', filters);
+      //   //set the label to the date
+      //   document.getElementById('date').textContent = dates[date];
+      // }
+
+			// Data source
+		//var url = 'https://github.com/cghr-toronto/covid.cghr.dev/raw/magbranch/public_html/forecasting/data/cvapp_border.geojson';
+		map.on('load', function(){
+			  map.addSource('covid19', {
+			    //'type': 'geojson',
+			    //'data': 'https://github.com/maggie-98/maggie-98.github.io/raw/master/cvapp_border.geojson'
+					//'data': './temp.geojson'
+					'type': 'vector',
+					'url': 'mapbox://mma98.cdk0l71r'
+			  });
+				map.addLayer({
+			      'id': 'covid19-data',
+			      'type': 'fill',
+			      'source': 'covid19',
+			      'layout' : {},
+			      'paint': {
+			          'fill-color': [
+			            'interpolate',
+			            ['linear'],
+			            ['to-number',['get', 'deaths'],0],
+			            0, '#ffffd4',
+			            100, '#fed98e',
+			            500, '#fe9929',
+			            1000, '#d95f0e',
+			            5000, '#993404'
+			          ],
+			          //'fill-opacity': 0.8,
+			          'fill-outline-color': 'black'
+			      },
+						'source-layer': 'demo-8gijtk',
+						'filter': ['==','date', '2020-03-16']
+
+			    });
+//Filter dates for slider
+          var dates = [
+          '2020-03-16', '2020-03-23', '2020-03-30', '2020-04-06'
+        ];
+          document.getElementById('slider').addEventListener('input',
+            function(e) {
+              var date = e.target.value;
+              //update map
+              map.setFilter('covid19-data', ['==', ['string',
+              ['get','date']],dates[date]]);
+              //update text in the UI
+              document.getElementById('active-date').innerText = dates[date];
+            });
+
+		});
+
+
+    //*********************************
+    //POP UPS, CLICKS, HOVERS
+    //*********************************
+    // ADD A POPUP OBJECT
+    var popup = new mapboxgl.Popup({
+            closeButton: false,
+            closeOnClick: false
+    });
+
+    // DEFINE WHEN YOU WANT THE POPUP TO HAPPEN
+    map.on('mousemove','covid19-data', function(e){
+        //popup.remove(); //If a popup already exists, get rid of it!
+
+        //get the rendered features that belong to the covid19-data layer
+        var features = map.queryRenderedFeatures(e.point, {
+            "layers": ["covid19-data"]}
+        );
+
+        //if there is a feature there, do the following
+        if (features.length > 0){
+            console.log(features[0]); //print out the first element of the features array that was selected
+            var feature = features[0]; //store the first element as 'feature'
+            popup.setLngLat(e.lngLat); //place the popup window at the lng and lat where your click event happened
+            //add stuff to the pop up:
+            popup.setHTML("Country:<b> " + feature.properties.NAME+ "</b><br>"+
+                          "Date:<b> " + feature.properties.date + "</b><br>" +
+                          "COVID-19 Deaths:<b> " + feature.properties.deaths + "</b><br>" +
+                          "Credible Interval:<b> "+
+                          "</b><br>");
+            popup.addTo(map); //finally add the pop up to the map
+
+        }
+        //if there are no features under the click, then print this in the web browser console
+        else{
+            console.log("no features from layer here...")
+        }
+    });
+
+    map.on('mouseleave', 'covid19-data', function(e){
+      map.getCanvas().style.cursor='';
+      popup.remove();
+    });
+
+
+
+
+	</script>
+
+</body>
+</html>
