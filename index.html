@@ -124,9 +124,9 @@
 		<h1> COVID19 Total Deaths Worldwide</h1>
 		<p>Data: CVApp and Prediction Model</p>
   <div class='session' id='slidebar'>
-      <h2>Date: <label id='active-date'>2020-03-16</label></h2>
+      <h2>Date: <label id='active-date'>2020-01-26</label></h2>
 		<input id="slider" class = 'row'
-    type="range" min="0" max="3" step="1" value="0" />
+    type="range" min="0" max="72" step="1" value="0" />
     <button id="play-button">Play</button>
 	<div class='session'>
 	  <h2>Total Deaths</h2>
@@ -146,7 +146,8 @@
 	</div>
 
 	<script src="//d3js.org/d3.v3.min.js" charset="utf-8"></script>
-	<script>
+  <!-- <script src='./cvapp_border.geojson'></script> -->
+  <script>
 		//preparation step, load style sheet
 		  mapboxgl.accessToken = 'pk.eyJ1IjoibW1hOTgiLCJhIjoiY2s1OGF5bGxhMG1oMjNlbzR1dWYybnFqbCJ9.MDPPnfBmlPCWmtCtpePJyg';
 			var map = new mapboxgl.Map({
@@ -167,11 +168,11 @@
 		//var url = 'https://github.com/cghr-toronto/covid.cghr.dev/raw/magbranch/public_html/forecasting/data/cvapp_border.geojson';
 		map.on('load', function(){
 			  map.addSource('covid19', {
-			    //'type': 'geojson',
-			    //'data': 'https://github.com/maggie-98/maggie-98.github.io/raw/master/cvapp_border.geojson'
-					//'data': './temp.geojson'
-					'type': 'vector',
-					'url': 'mapbox://mma98.cdk0l71r'
+			    'type': 'geojson',
+			    'data': 'https://maggie-98.github.io/cvapp_border.geojson'
+					//'data': cvapp_data
+					//'type': 'vector',
+					//'url': 'mapbox://mma98.cdk0l71r'
 			  });
 				map.addLayer({
 			      'id': 'covid19-data',
@@ -192,13 +193,25 @@
 			          //'fill-opacity': 0.8,
 			          'fill-outline-color': 'black'
 			      },
-						'source-layer': 'demo-8gijtk',
-						'filter': ['==','date', '2020-03-16']
+						//'source-layer': 'demo-8gijtk',
+						'filter': ['==','date', '2020-01-26']
 
 			    });
-//Filter dates for slider
+
+//FLITER DATES FOR SLIDER
           var dates = [
-          '2020-03-16', '2020-03-23', '2020-03-30', '2020-04-06'
+          '2020-01-26', //Sunday
+          '2020-01-27', '2020-01-28', '2020-01-29', '2020-01-30','2020-01-31', '2020-02-01', '2020-02-02',
+          '2020-02-03', '2020-02-04', '2020-02-05', '2020-02-06', '2020-02-07', '2020-02-08', '2020-02-09',
+          '2020-02-10', '2020-02-11', '2020-02-12', '2020-02-13', '2020-02-14', '2020-02-15', '2020-02-16',
+          '2020-02-17', '2020-02-18', '2020-02-19', '2020-02-20', '2020-02-21', '2020-02-22', '2020-02-23',
+          '2020-02-24', '2020-02-25', '2020-02-26', '2020-02-27', '2020-02-28', '2020-02-29', '2020-03-01',
+          '2020-03-02', '2020-03-03', '2020-03-04', '2020-03-05', '2020-03-06', '2020-03-07', '2020-03-08',
+          '2020-03-09', '2020-03-10', '2020-03-11', '2020-03-12', '2020-03-13', '2020-03-14', '2020-03-15',
+          '2020-03-16', '2020-03-17', '2020-03-18', '2020-03-19', '2020-03-20', '2020-03-21', '2020-03-22',
+          '2020-03-23', '2020-03-24', '2020-03-25', '2020-03-26', '2020-03-27', '2020-03-28', '2020-03-29',
+          '2020-03-30', '2020-03-31', '2020-04-01', '2020-04-02', '2020-04-03', '2020-04-04', '2020-04-05',
+          '2020-04-06', '2020-04-07'
         ];
           document.getElementById('slider').addEventListener('input',
             function(e) {
@@ -210,6 +223,109 @@
               document.getElementById('active-date').innerText = dates[date];
             });
 
+//AUTOMATE PLAY BUTTON
+        var margin = { top:50, right:10, bottom:0, left:10},
+            width = document.getElementById('slider').clientWidth
+            - margin.left - margin.right,
+            height = 50 - margin.top - margin.bottom;
+
+        var moving = false;
+        var currentValue = 0;
+        var targetValue = width;
+        console.log(targetValue);
+        var slider = d3.select('#slider')
+            .append('svg')
+            .attr('width', width + margin.left + margin.right)
+            .attr('height', height + margin.top + margin.bottom)
+            .attr("transform", "translate(" + 0 + "," + height + ")");
+
+        var playButton = d3.select('#play-button');
+        var x = d3.scaleLinear()
+            .domain([0, dates.length - 1])
+            .range([0, targetValue])
+            .clamp(true);
+            slider.append("line")
+                        .attr("class", "track")
+                        .attr("x1", x.range()[0])
+                        .attr("x2", x.range()[1])
+                        .select(function () { return this.parentNode.appendChild(this.cloneNode(true)); })
+                        .attr("class", "track-inset")
+                        .select(function () { return this.parentNode.appendChild(this.cloneNode(true)); })
+                        .attr("class", "track-overlay")
+                        .call(d3.drag()
+                            .on("start.interrupt", function () { slider.interrupt(); })
+                            .on("start drag", function () {
+                                currentValue = d3.event.x;
+                                console.log(currentValue)
+                                update(x.invert(currentValue));
+                            })
+                        );
+
+                    slider.insert("g", ".track-overlay")
+                        .attr("class", "ticks")
+                        .attr("transform", "translate(0," + 18 + ")")
+                        .selectAll("text")
+                        .data(x.ticks(10))
+                        .enter()
+                        .append("text")
+                        .attr("x", x)
+                        .attr("y", 10)
+                        .attr("text-anchor", "middle")
+                        .text(function (d) {
+                            return (d + 1);
+                        });
+
+                    var handle = slider.insert("circle", ".track-overlay")
+                        .attr("class", "handle")
+                        .attr("r", 9);
+
+                    var labels = slider.append("g").append("text")
+                        .attr("class", "labels")
+                        .attr("text-anchor", "middle")
+                        .text(dates[0])
+                        .attr("transform", "translate(0," + (-15) + ")")
+                        .style("fill", "#4F442B")
+
+                    playButton
+                        .on("click", function () {
+                            var button = d3.select(this);
+                            if (button.text() == "Pause") {
+                                moving = false;
+                                clearInterval(timer);
+                                // timer = 0;
+                                button.text("Play");
+                            } else {
+                                moving = true;
+                                timer = setInterval(step, 1000);
+                                button.text("Pause");
+                            }
+                            console.log("Slider moving: " + moving);
+                        })
+
+                    function step() {
+                        update(x.invert(currentValue));
+                        currentValue = currentValue + (targetValue / (dates.length));
+                        if (currentValue > targetValue) {
+                            moving = false;
+                            currentValue = 0;
+                            clearInterval(timer);
+                            // timer = 0;
+                            playButton.text("Play");
+                            // console.log("Slider moving: " + moving);
+                        }
+                    }
+
+                    function update(date) {
+                        var date = date;
+                        console.log(date)
+                        handle.attr("cx", x(date));
+
+                        labels
+                            .attr("x", x(date))
+                            .text(dates[date]);
+
+                        filterBy(date);
+                    }
 		});
 
 
