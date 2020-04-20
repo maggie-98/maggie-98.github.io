@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<title>COVID Deaths</title>
+	<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+	<script src="https://api.mapbox.com/mapbox-gl-js/v1.9.1/mapbox-gl.js"></script>
+	<link href="https://api.mapbox.com/mapbox-gl-js/v1.9.1/mapbox-gl.css" rel="stylesheet" />
+
+	<style>
+		body {
+		  margin: 0;
+		  padding: 0;
+		  font-family: 'Helvetica Neue', Helvetica, Arial, Sans-serif;
+		}
+
+		#map {
+		  position: absolute;
+		  top: 0;
+		  bottom: 0;
+		  width: 100%;
+		}
+
+		h1 {
+		  font-size: 20px;
+		  line-height: 30px;
+		}
+
+		h2 {
+		  font-size: 14px;
+		  line-height: 20px;
+		  margin-bottom: 10px;
+		}
+
+		a {
+		  text-decoration: none;
+		  color: #2dc4b2;
+		}
+
+		#console {
+		  position: absolute;
+		  width: 240px;
+		  margin: 10px;
+		  padding: 10px 20px;
+		  background-color: white;
+		}
+
+		.session {
+		  margin-bottom: 40px;
+		}
+
+		.row {
+		  height: 12px;
+		  width: 100%;
+		}
+
+		.colors {
+		  background: linear-gradient(to right, #fca107, #7f3121);
+		  margin-bottom: 5px;
+		}
+
+		.label {
+		  width: 15%;
+		  display: inline-block;
+		  text-align: center;
+		}
+	</style>
+</head>
+
+<body>
+	<div id="map"></div>
+	<div id='console'>
+		<h1> COVID19 Total Deaths Worldwide</h1>
+		<p>Data: CVApp and Prediction Model</p>
+		<button id="play-button">Play</button>
+		<input id="slider" type="range" min="0" max="3" step="1" value="0" />
+	<div class='session'>
+	  <h2>Total Deaths</h2>
+	  <div class='row colors'>
+	  </div>
+	  <div class='row labels'>
+	    <div class='label'>0</div>
+	    <div class='label'>100</div>
+	    <div class='label'>500</div>
+	    <div class='label'>1000</div>
+	    <div class='label'>5000</div>
+			<div class='label'>10000+</div>
+			<p><strong><em></strong> Last updated 04/07/2020</em></p>
+	  </div>
+	</div>
+	</div>
+
+	<!-- <script src="//d3js.org/d3.v3.min.js" charset="utf-8"></script> -->
+	<script>
+		//preparation step, load style sheet
+		  mapboxgl.accessToken = 'pk.eyJ1IjoibW1hOTgiLCJhIjoiY2s1OGF5bGxhMG1oMjNlbzR1dWYybnFqbCJ9.MDPPnfBmlPCWmtCtpePJyg';
+			var map = new mapboxgl.Map({
+		    container: 'map',
+		    style: 'mapbox://styles/mma98/ck921uabn1r0i1imjo8bifmvg', //style sheet location
+		    center: [2.038, 45.036], //starting position
+		    zoom: 1.28 //starting zoom level
+		  });
+
+			// Data source
+		//var url = 'https://github.com/cghr-toronto/covid.cghr.dev/raw/magbranch/public_html/forecasting/data/cvapp_border.geojson';
+		map.on('load', function(){
+			  map.addSource('covid19', {
+			    'type': 'geojson',
+			    'data': 'https://github.com/maggie-98/COVID/raw/master/cvapp_border.geojson'
+					//'data': './temp.geojson'
+					// 'type': 'vector',
+					// 'url': 'mapbox://mma98.401oms0h'
+			  });
+				map.addLayer({
+			      'id': 'covid19-data',
+			      'type': 'fill',
+			      'source': 'covid19',
+			      'layout' : {},
+			      'paint': {
+			          'fill-color': [
+			            'interpolate',
+			            ['linear'],
+			            ['to-number',['get', 'deaths'],0],
+			            0, '#edf8fb',
+			            100, '#b2e2e2',
+			            500, '#66c2a4',
+			            1000, '#2ca25f',
+			            5000, '#006d2c'
+			          ],
+			          //'fill-opacity': 0.8,
+			          'fill-outline-color': 'black'
+			      },
+						// 'paint': {
+						// 	'fill-color': '#f08',
+						// 	'fill-opacity': 0.4
+						// },
+						//'source-layer': 'cvapp_border-8ve9qa',
+						'filter': ['==','date', '2020-02-13']
+
+			    });
+		});
+
+	</script>
+
+</body>
+</html>
