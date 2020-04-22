@@ -9,131 +9,136 @@
     <link href="https://api.mapbox.com/mapbox-gl-js/v1.9.1/mapbox-gl.css" rel="stylesheet" />
 
     <style>
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Helvetica Neue', Helvetica, Arial, Sans-serif;
-        }
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Helvetica Neue', Helvetica, Arial, Sans-serif;
+      }
 
-        #map {
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            width: 100%;
-        }
+      #map {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 100%;
+      }
 
-        #play-button {
-            background: #F14E58;
-            padding-right: 26px;
-            border-radius: 3px;
-            border: none;
-            color: white;
-            margin: 0;
-            padding: 0 12px;
-            width: 60px;
-            cursor: pointer;
-            height: 30px;
-        }
+      #play-button {
+                  background: #F14E58;
+                  padding-right: 26px;
+                  border-radius: 3px;
+                  border: none;
+                  color: white;
+                  margin: 0;
+                  padding: 0 12px;
+                  width: 50px;
+                  cursor: pointer;
+                  height: 28px;
+              }
 
-        #play-button:hover {
-            background-color: #848480;
-        }
+              #play-button:hover {
+                  background-color: #848480;
+              }
 
-        .ticks {
-            font-size: 10px;
-        }
+              .ticks {
+                  font-size: 10px;
+              }
 
-        .track,
-        .track-inset,
-        .track-overlay {
-            stroke-linecap: round;
-        }
+              .track,
+              .track-inset,
+              .track-overlay {
+                  stroke-linecap: round;
+              }
 
-        .track {
-            stroke: #000;
-            stroke-opacity: 0.3;
-            stroke-width: 10px;
-        }
+              .track {
+                  stroke: #000;
+                  stroke-opacity: 0.3;
+                  stroke-width: 10px;
+              }
 
-        .track-inset {
-            stroke: #dcdcdc;
-            stroke-width: 8px;
-        }
+              .track-inset {
+                  stroke: #dcdcdc;
+                  stroke-width: 8px;
+              }
 
-        .track-overlay {
-            pointer-events: stroke;
-            stroke-width: 50px;
-            stroke: transparent;
-            cursor: crosshair;
-        }
+              .track-overlay {
+                  pointer-events: stroke;
+                  stroke-width: 50px;
+                  stroke: transparent;
+                  cursor: cell;
+              }
 
-        .handle {
-            fill: #fff;
-            stroke: #000;
-            stroke-opacity: 0.5;
-        }
+              .handle {
+                  fill: #fff;
+                  stroke: #000;
+                  stroke-opacity: 0.5;
+              }
 
-        h1 {
-            font-size: 20px;
-            line-height: 30px;
-        }
+      h1 {
+        font-size: 20px;
+        line-height: 30px;
+      }
 
-        h2 {
-            font-size: 14px;
-            line-height: 20px;
-            margin-bottom: 10px;
-        }
+      h2 {
+        font-size: 14px;
+        line-height: 20px;
+        margin-bottom: 10px;
+      }
 
-        a {
-            text-decoration: none;
-            color: #2dc4b2;
-        }
+      a {
+        text-decoration: none;
+        color: #2dc4b2;
+      }
 
-        #console {
-            position: absolute;
-            width: 240px;
-            margin: 10px;
-            padding: 10px 20px;
-            background-color: white;
-        }
+      #console {
+        position: absolute;
+        width: 250px;
+        margin: 10px;
+        padding: 10px 20px;
+        bottom: 8%;
+        left: 0;
+        background-color: white;
+      }
 
-        .session {
-            margin-bottom: 10px;
-        }
+      .session {
+        margin-bottom: 10px;
+      }
 
-        .row {
-            height: 12px;
-            width: 100%;
-        }
+      #slider {
+        position: absolute;
+        left: 24%;
+        width: 180px;
+        padding: 0 0;
+        cursor: pointer;
+        margin: 7px;
+      }
 
-        .colors {
-            background: linear-gradient(to right, #ffffd4, #993404);
-            margin-bottom: 5px;
-        }
 
-        .label {
-            width: 15%;
-            display: inline-block;
-            text-align: center;
-        }
+    /* Legend set up  */
+      .row {
+        height: 12px;
+        width: 100%;
+      }
 
-        /* Legend set up  */
-        .map-overlay {
-            font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
-            position: absolute;
-            width: 15%;
-            bottom: 0;
-            left: 10%;
-            padding: 10px;
-        }
+      .colors {
+        background: linear-gradient(to right, #ffffd4, #993404);
+        margin-bottom: 5px;
+      }
 
-        /* .map-overlay .map-overlay-inner {
-			background-color: #fff;
-			box-shadow: 0 1px 2px rgba(0.2, 0.2, 0.2, 0.2);
-			border-radius: 3px;
-			padding: 3px;
-			margin-bottom: 10px;
-		} */
+      .label {
+        width: 15%;
+        display: inline-block;
+        text-align: center;
+      }
+
+      .map-overlay {
+        font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+        position: absolute;
+        width: 15%;
+        bottom: 1%;
+        left: 5%;
+        padding: 10px;
+      }
+
     </style>
 </head>
 
