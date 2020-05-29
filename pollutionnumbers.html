@@ -182,7 +182,7 @@ body{
           <button class="pure-button" id="abbotsford">Abbotsford</button>
           <button class="pure-button" id="sarnia">Sarnia</button>
           <button class="pure-button" id="sherbrooke">Sherbrooke</button>
-          <button class="pure-button" id="saintjohn">Saint John's</button>
+          <button class="pure-button" id="saintjohn">Saint John</button>
           <button class="pure-button" id="kelowna">Kelowna</button>
         </div>
         </div>
@@ -190,6 +190,7 @@ body{
 
 
 <script src="//d3js.org/d3.v3.min.js" charset="utf-8"></script>
+<!-- <script src='https://maggie-98.github.io/CMA24boundaries.geojson'></script> -->
 <!-- <script src='https://maggie-98.github.io/dat.geojson'></script> -->
 
 <script>
@@ -237,6 +238,7 @@ body{
             }
 
             //Data Source
+            //Stations
             map.on('load', function(){
 
                 // map.addSource('dat',{
@@ -416,27 +418,27 @@ body{
             var world = [55.416826, -98.887453].reverse();
             var toronto = [43.667,-79.441].reverse();
             var montreal = [45.532922, -73.651589].reverse();
-            var vancouver = [49.25,-122.813].reverse();
+            var vancouver = [49.15,-122.813].reverse();
             var ottawa = [45.416667,-75.7].reverse();
-            var calgary = [51.083333,-114.08333].reverse();
+            var calgary = [51.060333,-114.08333].reverse();
             var edmonton = [53.55,-113.5].reverse();
             var hamilton = [43.256101,-79.857484].reverse();
             var winnipeg = [49.883333,-97.166667].reverse();
             var quebec = [46.8,-71.25].reverse();
             var oshawa = [43.9,-78.866667].reverse();
             var kitchener = [43.446976,-80.472484].reverse();
-            var halifax = [44.626,-63.518].reverse();
+            var halifax = [44.678346, -63.540038].reverse();
             var london = [42.983333,-81.25].reverse();
             var windsor = [42.301649,-83.030744].reverse();
             var victoria = [48.450234,-123.343529].reverse();
             var saskatoon = [52.133333,-106.666667].reverse();
-            var barrie = [44.383333,-79.7].reverse();
+            var barrie = [44.363333,-79.7].reverse();
             var regina = [50.45,-104.616667].reverse();
             var sudbury = [46.5,-80.966667].reverse();
             var abbotsford = [49.05,-122.3].reverse();
             var sarnia = [42.978417,-82.368177].reverse();
             var sherbrooke = [45.4,-71.9].reverse();
-            var saintjohn = [45.264297,-65.952466].reverse();
+            var saintjohn = [45.279419, -66.059580].reverse();
             var kelowna = [49.9,-119.483333].reverse();
             document.getElementById('world').addEventListener('click', function() {
               map.flyTo({center: world, zoom: 3, essential: true})
@@ -445,10 +447,10 @@ body{
               map.flyTo({center: toronto, zoom: 10.15, essential: true})
             });
             document.getElementById('montreal').addEventListener('click', function() {
-              map.flyTo({center: montreal, zoom: 10.6, essential: true})
+              map.flyTo({center: montreal, zoom: 9.6, essential: true})
             });
             document.getElementById('vancouver').addEventListener('click', function() {
-              map.flyTo({center: vancouver, zoom: 9.8, essential: true})
+              map.flyTo({center: vancouver, zoom: 9.5, essential: true})
             });
             document.getElementById('ottawa').addEventListener('click', function() {
               map.flyTo({center: ottawa, zoom: 9.8, essential: true})
@@ -505,7 +507,7 @@ body{
               map.flyTo({center: sarnia, zoom: 11, essential: true})
             });
             document.getElementById('sherbrooke').addEventListener('click', function() {
-              map.flyTo({center: sherbrooke, zoom: 9.8, essential: true})
+              map.flyTo({center: sherbrooke, zoom: 8.5, essential: true})
             });
             document.getElementById('saintjohn').addEventListener('click', function() {
               map.flyTo({center: saintjohn, zoom: 11.8, essential: true})
@@ -514,5 +516,50 @@ body{
               map.flyTo({center: kelowna, zoom: 8, essential: true})
             });
 
+        </script>
+        <script>
+        mapboxgl.accessToken = 'pk.eyJ1IjoibW1hOTgiLCJhIjoiY2s1OGF5bGxhMG1oMjNlbzR1dWYybnFqbCJ9.MDPPnfBmlPCWmtCtpePJyg';
+//         var map = new mapboxgl.Map({
+//             container: 'map', //container id in HTML
+//             style: 'mapbox://styles/mma98/ckamswn7v0m1r1iqlu8x49ijw',  //stylesheet location
+//             // center: [-97.068, 56.423],  // starting point, longitude/latitude
+//             // zoom: 3.09 // starting zoom level
+//             // center: [-79.441, 43.667],
+//             center: [-79.441, 43.667],
+//             zoom: 10.15
+// //                 pitch: 180, // pitch in degrees
+//         });
+        map.on('load', function(){
+          map.addSource('boundary', {
+            'type': 'vector',
+            'url': 'mapbox://mma98.3raiojy7'
+          });
+
+          map.addLayer({
+            'id': 'border',
+            'type': 'fill',
+            'source': 'boundary',
+            'source-layer': 'CMA24boundaries-6wh5ya',
+            'visibility': 'visible',
+            'paint': {
+              'fill-color': 'white',
+              'fill-opacity': 0.2,
+              'fill-outline-color': '#9ffd32'
+            }
+          });
+
+          map.addLayer({
+            'id': 'border_line',
+            'type': 'line',
+            'source': 'boundary',
+            'source-layer': 'CMA24boundaries-6wh5ya',
+            'visibility': 'visible',
+            'paint': {
+              'line-color': '#9ffd32',
+              'line-width': 3
+            }
+          })
+
+        })
         </script>
 </html>
