@@ -150,8 +150,8 @@ body{
         <div id='console'>
             <div class='session' id='slidebar'>
               <h1>Total Number of Pollutants</h1>
-                <h2>Year: <label id='year'>1996</label></h2>
-                <input id="slider" class='row' type="range" min="0" max="20" step="1" value="0" />
+                <h2>Year: <label id='year'>2016</label></h2>
+                <input id="slider" class='row' type="range" min="0" max="20" step="1" value="20" />
             </div>
         </div>
 
@@ -162,24 +162,24 @@ body{
           <button class="pure-button pure-button-disabled" id="toronto">Toronto</button>
           <button class="pure-button" id="montreal">Montréal</button>
           <button class="pure-button" id="vancouver">Vancouver</button>
-          <button class="pure-button" id="ottawa">Ottawa</button>
+          <button class="pure-button" id="ottawa">Ottawa-Gatineau</button>
           <button class="pure-button" id="calgary">Calgary</button>
           <button class="pure-button" id="edmonton">Edmonton</button>
           <button class="pure-button" id="hamilton">Hamilton</button>
           <button class="pure-button" id="winnipeg">Winnipeg</button>
           <button class="pure-button" id="quebec">Québec</button>
           <button class="pure-button" id="oshawa">Oshawa</button>
-          <button class="pure-button" id="kitchener">Kitchener</button>
-          <button class="pure-button" id="halifax">Halifax</button>
+          <button class="pure-button" id="kitchener">Kitchener-Cambridge-Waterloo</button>
           <br>
+          <button class="pure-button" id="halifax">Halifax</button>
           <button class="pure-button" id="london">London</button>
           <button class="pure-button" id="windsor">Windsor</button>
           <button class="pure-button" id="victoria">Victoria</button>
           <button class="pure-button" id="saskatoon">Saskatoon</button>
           <button class="pure-button" id="barrie">Barrie</button>
           <button class="pure-button" id="regina">Regina</button>
-          <button class="pure-button" id="sudbury">Sudbury</button>
-          <button class="pure-button" id="abbotsford">Abbotsford</button>
+          <button class="pure-button" id="sudbury">Greater Sudbury</button>
+          <button class="pure-button" id="abbotsford">Abbotsford-Mission</button>
           <button class="pure-button" id="sarnia">Sarnia</button>
           <button class="pure-button" id="sherbrooke">Sherbrooke</button>
           <button class="pure-button" id="saintjohn">Saint John</button>
@@ -202,11 +202,10 @@ body{
                 // center: [-97.068, 56.423],  // starting point, longitude/latitude
                 // zoom: 3.09 // starting zoom level
                 // center: [-79.441, 43.667],
-                center: [-79.441, 43.667],
-                zoom: 10.15
+                center: [-79.515158, 43.875756],
+                zoom: 8.15
 //                 pitch: 180, // pitch in degrees
             });
-
 
             // Add zoom and rotation controls to the map.
             // map.addControl(new mapboxgl.NavigationControl());
@@ -241,29 +240,28 @@ body{
             //Stations
             map.on('load', function(){
 
-                // map.addSource('dat',{
-                //     'type': 'geojson',
-                //     'data': pollutants
-                // });
-
                 map.addSource('dat', {
                   'type': 'vector',
                   'url': 'mapbox://mma98.byqs8qkc'
                 });
+
 
                 map.addLayer({
                     'id': 'stations',
                     'type':'circle',
                     'source': 'dat',
                     'source-layer': 'dat-9xn6l0',
-                    'layout':{},
-                    'visibility': 'visible',
-                    'paint': {
-                        'circle-radius': 8,
-                        'circle-color': 'red',
-                        'circle-opacity':1
+                    'layout':{
+                        'visibility': 'visible'
                     },
-                    'filter': ['==', 'year', 1996]
+                    'paint': {
+                        'circle-radius': 6.5,
+                        'circle-color': 'red',
+                        'circle-opacity':1,
+                        'circle-stroke-color': 'white',
+                        'circle-stroke-width': 0.8
+                    },
+                    'filter': ['==', 'year', 2016]
                   });
 
                   map.addLayer({
@@ -271,19 +269,19 @@ body{
                     'type': 'symbol',
                     'source': 'dat',
                     'source-layer': 'dat-9xn6l0',
-                    'visibility': 'visible',
                     'layout': {
+                      'visibility': 'visible',
                       'text-field': ['to-string',['get', 'o3']],
                       'text-variable-anchor': ['bottom-right'],
                       'text-font': ['Open Sans Bold'],
-                      'text-size':12,
+                      'text-size':10.8,
                       'text-allow-overlap': true,
                       'text-justify': 'auto'
                   },
                     'paint': {
                         'text-color': '#08F7FE'
                     },
-                    'filter': ['==', 'year', 1996]
+                    'filter': ['==', 'year', 2016]
                   });
 
                     map.addLayer({
@@ -292,7 +290,7 @@ body{
                       'source': 'dat',
                       'source-layer': 'dat-9xn6l0',
                       'layout': {
-                        'visibility': 'visible',
+                        'visibility': 'none',
                         'text-field': [
                         'to-string',['get', 'no2']
                       ],
@@ -300,14 +298,14 @@ body{
                       'text-font': [
                         'Open Sans Bold'
                       ],
-                      'text-size':12,
+                      'text-size':10.8,
                       'text-allow-overlap': true,
                       'text-justify': 'auto'
                     },
                       'paint': {
                           'text-color': '#09FBD3'
                       },
-                      'filter': ['==', 'year', 1996]
+                      'filter': ['==', 'year', 2016]
                     });
 
                     map.addLayer({
@@ -316,18 +314,18 @@ body{
                       'source': 'dat',
                       'source-layer': 'dat-9xn6l0',
                       'layout': {
-                        'visibility': 'visible',
+                        'visibility': 'none',
                         'text-field': ['to-string',['get', 'pm25']],
                         'text-variable-anchor': ['top-right'],
                         'text-font': ['Open Sans Bold'],
-                        'text-size':12,
+                        'text-size':10.8,
                         'text-allow-overlap': true,
                         'text-justify': 'auto'
                     },
                       'paint': {
                           'text-color': '#FE53BB'
                       },
-                      'filter': ['==', 'year', 1996]
+                      'filter': ['==', 'year', 2016]
                     });
 
                     map.addLayer({
@@ -336,49 +334,71 @@ body{
                       'source': 'dat',
                       'source-layer': 'dat-9xn6l0',
                       'layout': {
-                        'visibility': 'visible',
+                        'visibility': 'none',
                         'text-field': ['to-string',['get', 'pm10']],
                         'text-variable-anchor': ['top-left'],
                         'text-font': ['Open Sans Bold'],
-                        'text-size':12,
+                        'text-size':10.8,
                         'text-allow-overlap': true,
                         'text-justify': 'auto'
                     },
                       'paint': {
                           'text-color': '#F5D300'
                       },
-                      'filter': ['==', 'year', 1996]
+                      'filter': ['==', 'year', 2016]
                     });
 
-                  var toggleableLayerIds = ['stations', 'O3', 'No2','Pm2.5', 'Pm10']
-                  for (var i = 0; i < toggleableLayerIds.length; i++) {
-                      var id = toggleableLayerIds[i];
+                    //Toggleable Layers Setup
+                   toggleLayer(['stations'], 'Stations');
+                   toggleLayer(['O3'], 'O3');
+                   toggleLayer(['No2'], 'No2');
+                   toggleLayer(['Pm2.5'], 'PM 2.5');
+                   toggleLayer(['Pm10'], 'PM 10');
 
+                   function toggleLayer(ids, name) {
                       var link = document.createElement('a');
                       link.href = '#';
-                      link.className = 'active';
-                      link.textContent = id;
-
-                      link.onclick = function(e) {
-                      var clickedLayer = this.textContent;
-                      e.preventDefault();
-                      e.stopPropagation();
-
-                      var visibility = map.getLayoutProperty(clickedLayer, 'visibility');
-
-                      // toggle layer visibility by changing the layout object's visibility property
-                      if (visibility === 'visible') {
-                      map.setLayoutProperty(clickedLayer, 'visibility', 'none');
-                      this.className = '';
-                    } else {
-                      this.className = 'active';
-                      map.setLayoutProperty(clickedLayer, 'visibility', 'visible');
+                      // Get the visibility for all layers in the ids argument.
+                      var visibility = ids.map(function(id) {
+                        return map.getLayoutProperty(id, 'visibility');
+                      });
+                      // Get the unique values.
+                      var visUnique = visibility.filter(uniques);
+                      // Default to not visible.
+                      var visCssClass = '';
+                      // If all layers are visible, use the 'active' class so the toggle is "on".
+                      if ( visUnique.length === 1 && visUnique[0] === 'visible' ) {
+                        visCssClass = 'active';
                       }
+                      link.className = visCssClass;
+                      link.textContent = name;
+
+                      link.onclick = function (e) {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          for (layers in ids){
+                          var visibility = map.getLayoutProperty(ids[layers], 'visibility');
+
+                          if (visibility === 'visible') {
+                              map.setLayoutProperty(ids[layers], 'visibility', 'none');
+                              this.className = '';
+                          } else {
+                              this.className = 'active';
+                              map.setLayoutProperty(ids[layers], 'visibility', 'visible');
+                          }
+                          }
+
                       };
 
                       var layers = document.getElementById('menu');
                       layers.appendChild(link);
-                      }
+                  }
+
+                  // http://stackoverflow.com/a/14438954/1934
+                  function uniques(value, index, self) {
+                    return self.indexOf(value) === index;
+                  }
+
 
 
                   document.getElementById('slider').addEventListener('input',
@@ -416,9 +436,9 @@ body{
             // Fly-to Buttons
             // fly button setting
             var world = [55.416826, -98.887453].reverse();
-            var toronto = [43.667,-79.441].reverse();
+            var toronto = [-79.515158, 43.875756];
             var montreal = [45.532922, -73.651589].reverse();
-            var vancouver = [49.15,-122.813].reverse();
+            var vancouver = [49.25,-122.813].reverse();
             var ottawa = [45.416667,-75.7].reverse();
             var calgary = [51.060333,-114.08333].reverse();
             var edmonton = [53.55,-113.5].reverse();
@@ -435,7 +455,7 @@ body{
             var barrie = [44.363333,-79.7].reverse();
             var regina = [50.45,-104.616667].reverse();
             var sudbury = [46.5,-80.966667].reverse();
-            var abbotsford = [49.05,-122.3].reverse();
+            var abbotsford = [49.07,-122.3].reverse();
             var sarnia = [42.978417,-82.368177].reverse();
             var sherbrooke = [45.4,-71.9].reverse();
             var saintjohn = [45.279419, -66.059580].reverse();
@@ -444,73 +464,73 @@ body{
               map.flyTo({center: world, zoom: 3, essential: true})
             });
             document.getElementById('toronto').addEventListener('click', function() {
-              map.flyTo({center: toronto, zoom: 10.15, essential: true})
+              map.flyTo({center: toronto, zoom: 8.15, essential: true})
             });
             document.getElementById('montreal').addEventListener('click', function() {
-              map.flyTo({center: montreal, zoom: 9.6, essential: true})
+              map.flyTo({center: montreal, zoom: 8.6, essential: true})
             });
             document.getElementById('vancouver').addEventListener('click', function() {
-              map.flyTo({center: vancouver, zoom: 9.5, essential: true})
+              map.flyTo({center: vancouver, zoom: 8.9, essential: true})
             });
             document.getElementById('ottawa').addEventListener('click', function() {
-              map.flyTo({center: ottawa, zoom: 9.8, essential: true})
+              map.flyTo({center: ottawa, zoom: 8.9, essential: true})
             });
             document.getElementById('calgary').addEventListener('click', function() {
-              map.flyTo({center: calgary, zoom: 9.8, essential: true})
+              map.flyTo({center: calgary, zoom: 6.9, essential: true})
             });
             document.getElementById('edmonton').addEventListener('click', function() {
-              map.flyTo({center: edmonton, zoom: 9.8, essential: true})
+              map.flyTo({center: edmonton, zoom: 5.9, essential: true})
             });
             document.getElementById('hamilton').addEventListener('click', function() {
-              map.flyTo({center: hamilton, zoom: 11, essential: true})
+              map.flyTo({center: hamilton, zoom: 10, essential: true})
             });
             document.getElementById('winnipeg').addEventListener('click', function() {
-              map.flyTo({center: winnipeg, zoom: 9.8, essential: true})
+              map.flyTo({center: winnipeg, zoom: 8.8, essential: true})
             });
             document.getElementById('quebec').addEventListener('click', function() {
-              map.flyTo({center: quebec, zoom: 9.8, essential: true})
+              map.flyTo({center: quebec, zoom: 8.8, essential: true})
             });
             document.getElementById('oshawa').addEventListener('click', function() {
-              map.flyTo({center: oshawa, zoom: 11, essential: true})
+              map.flyTo({center: oshawa, zoom: 10, essential: true})
             });
             document.getElementById('kitchener').addEventListener('click', function() {
-              map.flyTo({center: kitchener, zoom: 10.5, essential: true})
+              map.flyTo({center: kitchener, zoom: 9.5, essential: true})
             });
             document.getElementById('halifax').addEventListener('click', function() {
-              map.flyTo({center: halifax, zoom: 11.5, essential: true})
+              map.flyTo({center: halifax, zoom: 7.8, essential: true})
             });
             document.getElementById('london').addEventListener('click', function() {
-              map.flyTo({center: london, zoom: 9.8, essential: true})
+              map.flyTo({center: london, zoom: 8.6, essential: true})
             });
             document.getElementById('windsor').addEventListener('click', function() {
-              map.flyTo({center: windsor, zoom: 11, essential: true})
+              map.flyTo({center: windsor, zoom: 9, essential: true})
             });
             document.getElementById('victoria').addEventListener('click', function() {
-              map.flyTo({center: victoria, zoom: 10.5, essential: true})
+              map.flyTo({center: victoria, zoom: 9.5, essential: true})
             });
             document.getElementById('saskatoon').addEventListener('click', function() {
-              map.flyTo({center: saskatoon, zoom: 9.8, essential: true})
+              map.flyTo({center: saskatoon, zoom: 6.8, essential: true})
             });
             document.getElementById('barrie').addEventListener('click', function() {
-              map.flyTo({center: barrie, zoom: 9.8, essential: true})
+              map.flyTo({center: barrie, zoom: 8.8, essential: true})
             });
             document.getElementById('regina').addEventListener('click', function() {
-              map.flyTo({center: regina, zoom: 9, essential: true})
+              map.flyTo({center: regina, zoom: 8, essential: true})
             });
             document.getElementById('sudbury').addEventListener('click', function() {
-              map.flyTo({center: sudbury, zoom: 10.5, essential: true})
+              map.flyTo({center: sudbury, zoom: 8.5, essential: true})
             });
             document.getElementById('abbotsford').addEventListener('click', function() {
-              map.flyTo({center: abbotsford, zoom: 11, essential: true})
+              map.flyTo({center: abbotsford, zoom: 9, essential: true})
             });
             document.getElementById('sarnia').addEventListener('click', function() {
-              map.flyTo({center: sarnia, zoom: 11, essential: true})
+              map.flyTo({center: sarnia, zoom: 10, essential: true})
             });
             document.getElementById('sherbrooke').addEventListener('click', function() {
               map.flyTo({center: sherbrooke, zoom: 8.5, essential: true})
             });
             document.getElementById('saintjohn').addEventListener('click', function() {
-              map.flyTo({center: saintjohn, zoom: 11.8, essential: true})
+              map.flyTo({center: saintjohn, zoom: 9, essential: true})
             });
             document.getElementById('kelowna').addEventListener('click', function() {
               map.flyTo({center: kelowna, zoom: 8, essential: true})
