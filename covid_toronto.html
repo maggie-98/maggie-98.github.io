@@ -170,7 +170,9 @@
         </div>
     </div>
 
+<script src='https://maggie-98.github.io/covid_toronto.geojson'></script>
     <script src="https://d3js.org/d3.v4.min.js" charset="utf-8"></script>
+	<script src='https://npmcdn.com/@turf/turf/turf.min.js'></script>
     <!-- <script src='./cvapp_border.geojson'></script> -->
     <script>
         //preparation step, load style sheet
@@ -222,7 +224,7 @@
         map.on('load', function () {
             map.addSource('covid19', {
                 'type': 'geojson',
-                'data': 'https://maggie-98.github.io/covid_toronto.geojson'
+                'data': torontocovid
             });
             map.addLayer({
                 'id': 'covid19-data',
