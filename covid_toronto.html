@@ -415,6 +415,44 @@
 
     </script>
 
+    <!-- boundaries shapefile -->
+        <script>
+        mapboxgl.accessToken = 'pk.eyJ1IjoibW1hOTgiLCJhIjoiY2s1OGF5bGxhMG1oMjNlbzR1dWYybnFqbCJ9.MDPPnfBmlPCWmtCtpePJyg';
+
+        map.on('load', function(){
+          map.addSource('boundary', {
+            'type': 'vector',
+            'url': 'mapbox://mma98.a23wapx7'
+          });
+
+          map.addLayer({
+            'id': 'border',
+            'type': 'fill',
+            'source': 'boundary',
+            'source-layer': 'toneighshape-4fie8e',
+            'visibility': 'visible',
+            'paint': {
+              'fill-color': 'white',
+              'fill-opacity': 0.5,
+              'fill-outline-color': '#9ffd32'
+            }
+          });
+
+          map.addLayer({
+            'id': 'border_line',
+            'type': 'line',
+            'source': 'boundary',
+            'source-layer': 'toneighshape-4fie8e',
+            'visibility': 'visible',
+            'paint': {
+              'line-color': 'yellow',
+              'line-width': 1
+            }
+          })
+
+        })
+        </script>
+
 </body>
 
 </html>
