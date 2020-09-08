@@ -147,8 +147,8 @@
         <h1> Daily COVID19 Cases</h1>
         <h2>Data: <a href = 'https://open.toronto.ca/dataset/covid-19-cases-in-toronto/'>City of Toronto</a></h2>
         <div class='session' id='slidebar'>
-            <h2>Date: <label id='date'>2020-01-23</label></h2>
-            <input id="slider" class='row' type="range" min="0" max="172" step="1" value="0" />
+            <h2>Date: <label id='date'>2020-02-21</label></h2>
+            <input id="slider" class='row' type="range" min="0" max="103" step="1" value="0" />
             <button id="play-button">Play</button>
             <p><strong><em></strong> Last updated 07/13/2020</em></p>
         </div>
@@ -178,16 +178,12 @@
         var map = new mapboxgl.Map({
             container: 'map',
             style: 'mapbox://styles/mma98/ck921uabn1r0i1imjo8bifmvg', //style sheet location
-            center: [-79.4, 43.8], //starting position
-            zoom: 8.5 //starting zoom level
+            center: [-79.4, 43.7], //starting position
+            zoom: 10 //starting zoom level
         });
         //FLITER DATES FOR SLIDER
         var dates = [
-            '2020-01-23', '2020-01-24', '2020-01-25', '2020-01-26',
-            '2020-01-27', '2020-01-28', '2020-01-29', '2020-01-30', '2020-01-31', '2020-02-01', '2020-02-02',
-            '2020-02-03', '2020-02-04', '2020-02-05', '2020-02-06', '2020-02-07', '2020-02-08', '2020-02-09',
-            '2020-02-10', '2020-02-11', '2020-02-12', '2020-02-13', '2020-02-14', '2020-02-15', '2020-02-16',
-            '2020-02-17', '2020-02-18', '2020-02-19', '2020-02-20', '2020-02-21', '2020-02-22', '2020-02-23',
+'2020-02-21', '2020-02-22', '2020-02-23',
             '2020-02-24', '2020-02-25', '2020-02-26', '2020-02-27', '2020-02-28', '2020-02-29', '2020-03-01',
             '2020-03-02', '2020-03-03', '2020-03-04', '2020-03-05', '2020-03-06', '2020-03-07', '2020-03-08',
             '2020-03-09', '2020-03-10', '2020-03-11', '2020-03-12', '2020-03-13', '2020-03-14', '2020-03-15',
@@ -213,6 +209,7 @@
         function filterBy(date) {
             //var filters = ['==', ['string', ['get', 'date'], dates]];
             map.setFilter('covid19-data', ['==', 'date', dates[date]]);
+            map.setFilter('cases', ['==', 'date', dates[date]]);
             //set the label to the date
             document.getElementById('date').textContent = dates[date];
             document.getElementById('slider').value = date;
@@ -243,13 +240,28 @@
 												40, '#bd0026',
 												50, '#800026'
                     ],
-                    //'fill-opacity': 0.8,
+                    // 'fill-opacity': 0.2,
                     'fill-outline-color': 'black'
                 },
-                'filter': ['==', 'date', '2020-01-23']
-
-            });
-
+                'filter': ['==', 'date', '2020-02-21']
+            }); //puts this layer behind cases layer on the map
+            map.addLayer({
+                                  'id': 'cases',
+                                  'type': 'symbol',
+                                  'source': 'covid19',
+                                  'layout': {
+                                    // 'visibility': 'visible',
+                                    'text-field': ['get', 'Total'],
+                                    // 'text-variable-anchor': ['center'],
+                                    // 'text-font': ['Open Sans Bold'],
+                                    // 'text-size':12,
+                                    // 'text-color': 'black',
+                                    // 'text-allow-overlap': true,
+                                    // 'text-ignore-placement': true,
+                                   // 'text-justify': 'center'
+                                },
+                                  'filter': ['==', 'date', '2020-02-21']
+                                });
 
             document.getElementById('slider').addEventListener('input',
                 function (e) {
@@ -335,7 +347,7 @@
                         button.text("Play");
                     } else {
                         moving = true;
-                        timer = setInterval(step, 200);
+                        timer = setInterval(step, 750);
                         button.text("Pause");
                     }
                     console.log("Slider moving: " + moving);
@@ -433,10 +445,10 @@
             'visibility': 'visible',
             'paint': {
               'fill-color': 'white',
-              'fill-opacity': 0.5,
+              'fill-opacity': 0.7,
               'fill-outline-color': '#9ffd32'
             }
-          });
+          }, 'covid19-data');
 
           map.addLayer({
             'id': 'border_line',
@@ -445,12 +457,12 @@
             'source-layer': 'toneighshape-4fie8e',
             'visibility': 'visible',
             'paint': {
-              'line-color': 'yellow',
+              'line-color': 'black',
               'line-width': 1
             }
-          })
+          }, 'covid19-data')
 
-        })
+        });
         </script>
 
 </body>
