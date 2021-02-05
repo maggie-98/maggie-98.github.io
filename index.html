@@ -1,226 +1,24 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset=utf-8 />
-        <title>Migration Canada</title>
-        <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
-        <script src="https://api.mapbox.com/mapbox-gl-js/v1.7.0/mapbox-gl.js"></script>
-        <script type = "text/javascript" src = "https://d3js.org/d3.v4.min.js"></script>
-        <link href="https://api.mapbox.com/mapbox-gl-js/v1.7.0/mapbox-gl.css" rel="stylesheet" />
-        <style>
-            body { margin:0; padding:0; }
-            h2,
-            h3 {margin: 10px;font-size: 1.2em;}
-            h3 {font-size: 1em;}
-            p {
-              font-size: 0.85em;
-              margin: 10px;
-              text-align: left;
-            }
-            #map {position: absolute;; top:0; width:100%;}
-            .map {
-                  position: absolute;
-                  top: 0;
-                  bottom: 0;
-                  width: 100%;
-                  height: 100%;
-            }
-            .map-overlay {
-              top: 0 ;
-              position: fixed;
-              bottom: 0;
-              left: 0; /*changed to left on 03.22 for graphing purpose*/
-              background: rgba(255, 255, 255, 0.9);
-              margin-right: 0px auto; /* changed 03.20 to auto-resize*/
-              margin-bottom: 0px auto;/* changed 03.20 to auto-resize*/
-              font-family: Arial, sans-serif;
-              overflow: auto;
-              border-radius: 3px;
-              width: 28%;
-              height: 100%;
-              border-right: 2px solid black;
-              z-index: 1;
-            }
-            #features {
-              height: 800px auto;/* changed 03.20 to auto-resize*/
-              margin-top: 0px auto;/* changed 03.20 to auto-resize*/
-            }
-
-            #menu {
-            background: #fff;
-            position: fixed;
-            z-index: 1;
-            top: 10px;
-            right: 10px;
-            border-radius: 3px;
-            width: 120px auto;
-            border: 1px solid rgba(0, 0, 0, 0.4);
-            font-family: 'Open Sans', sans-serif;
-            }
-
-            #menu a {
-            font-size: 13px;
-            color: #404040;
-            display: block;
-            margin: 0;
-            padding: 0;
-            padding: 10px;
-            text-decoration: none;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.25);
-            text-align: center;
-            }
-
-            #menu a:last-child {
-            border: none;
-            }
-
-            #menu a:hover {
-            background-color: #3887be;
-            color: #404040;
-            }
-
-            #menu a.non-active {
-            background-color: #eef0e9;
-            color: #ffffff;
-            }
-
-            #menu a.active {
-            background-color: #3887be;
-            color: #ffffff;
-            }
-
-            #menu a.active:hover {
-            background: #3074a4;
-            }
-/* changed 03.22 to make legend align to all shapes  */
-            .legend-key {
-                background-color: rgba(255, 255, 255, 30);
-                border-radius: 5px;
-                right: 0px;
-                bottom: 0px;
-                margin-bottom: 0px;
-                /*box-shadow: 0 10px 2px rgba(0, 0, 0, 30);*/
-                font: 14px 'Helvetica Neue', Arial, Helvetica, sans-serif;
-                padding: 3px;
-                position: fixed;
-                width: 8%;
-                z-index: 10;
-            }
-            .legend-key h4 {
-                margin: 0 0 10px;
-                margin-left: 10px;
-                font: 16px 'Helvetica Neue', Arial, Helvetica, sans-serif;
-            }
-            .legend-key div span {
-                border: 50%;
-                display: inline-block;
-                height: 15px;
-                margin-right: 5px;
-                margin-left: 10px;
-                width: 20px;
-            }
-/* added by Michael on 03.20 to show the bar graphs*/
-            .chart{
-
-              position: fixed;
-              top: 0 ;
-              bottom: 0;
-              left: 0; /*changed to left on 03.22 for graphing purpose*/
-            /*  background: rgba(101, 151, 216, 0.5);*/
-              padding-top: 10px;
-              margin-left: 0px; /* changed 03.20 to auto-resize*/
-              margin-bottom: 0px auto;/* changed 03.20 to auto-resize*/
-              font-family: Arial, sans-serif;
-              overflow: auto;
-              overflow-y: scroll;
-              border-radius: 3px;
-              width: 28%;
-              height: 55%;
-              border-right: 2px solid black;
-              z-index: 2;
-
-            }
-            #graph{
-              position:fixed;
-              top:60px;
-              bottom:300px;
-              width:28%;
-              overflow-y: scroll;
-            }
-            #chartPosit{
-              position:absolute; top:90px; bottom:300px; width:33.33333%;
-            }
-            /*this is for the chart*/
-            .chart svg {
-              font-family: Arial, sans-serif;
-              text-align: left;
-            }
-            .chart rect {
-
-            }
-            .chart text {
-               font: 12px sans-serif;
-            }
-
-/*added by Michael on 03.24  for displaying the world map*/
-            .mapSmall{
-
-              position: fixed;
-              bottom: 0;
-              left: 0; /*changed to left on 03.22 for graphing purpose*/
-              background: rgba(11, 141, 26, 0);
-              padding-bottom: 0px;
-              margin-left: 0px auto; /* changed 03.20 to auto-resize*/
-              margin-bottom: 0px auto;/* changed 03.20 to auto-resize*/
-              font-family: Arial, sans-serif;
-              overflow: auto;
-              border-radius: 3px;
-              border-top: 3px solid black;
-              border-right: 1px solid black;
-              width: 28%;
-              height: 35%;
-              border-right: 2px solid black;
-              z-index: 3;
-            }
-        </style>
-    </head>
-
-    <body>
-    <div id="large" class="map"></div><!-- Create a large map -->
-    </div>
-      <div class='map-overlay' id='maps'>
-        <h2>Cultural Diversity of Canada</h2>
-        <div id='pd'>
-          <p>Select a layer and click on a region!</p>
-        </div>
-      </div>
-      <!-- Add chart (for the bar graph) -->
-      <div class = 'chart' id = 'graph'>
-
-      </div>
-
-
-
-      <!-- Add Legend -->
-      <div class="legend-key" id="Legend-key" >
-        <h4><b>Census Information</b></h4>
-         <div><span style="background-color:#000000"></span> No Data </div>
-         <div><span style="background-color:#5e4fa2"></span> Low </div>
-         <div><span style="background-color:#3288bd"></span> |</div>
-         <div><span style="background-color:#66c2a5"></span> |</div>
-         <div><span style="background-color:#abdda4"></span> |</div>
-         <div><span style="background-color:#e6f598"></span> |</div>
-         <div><span style="background-color:#fee08b"></span> |</div>
-         <div><span style="background-color:#fdae61"></span> |</div>
-         <div><span style="background-color:#f46d43"></span> |</div>
-         <div><span style="background-color:#d53e4f"></span> |</div>
-         <div><span style="background-color:#9e0142"></span> High </div>
-      </div>
-      <nav id="menu"></nav>
-      <!-- Create a small map -->
-      <div id="small" class="mapSmall"></div><!-- Create a large map -->
-      <!-- Add script source for the interaction javascript -->
-      <script src = "./CensusAnalyses.js"></script>
-
-    </body>
+<body>
+<h1><center>COVID-19 Interactive Web Map Visualization</center></h1>
+<meta charset="UTF-8">
+</br>
+  <p><center>Note: Due to large data size, map takes ~10s to load once opened.</center></p>
+  </br>
+<h2><center><a href='https://maggie-98.github.io/map_v1_daily_cases.html'>Daily Confirmed
+COVID19 Cases Projection (33 countries)</a></center></h2>
+ </br>
+ <h2><center><a href='https://maggie-98.github.io/map_v1_cumulative_deaths.html'>Cumulative
+ COVID19 Deaths Projection (33 countries)</a></center></h2>
+ </br>
+ <h2><center><a href='https://maggie-98.github.io/covid_toronto.html'>Toronto Neighborhood 
+   Daily Cases</a></center></h2>
+ </br>
+<h1><center>Pollution Project</center></h1>
+<meta charset="UTF-8">
+  </br>
+<h2><center><a href='https://maggie-98.github.io/pollutionnumbers.html'>Health Canada Air
+  Pollution Map</a></center></h2>
+</body>
 </html>
